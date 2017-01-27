@@ -1,0 +1,30 @@
+EE 367 
+
+As part of your Lab 0 assignment for EE 367,
+edit this text document using vi or pico.
+Fill in the following information
+
+Your name: Elena Barbour
+
+Your lab section (morning/afternoon):Thursday Afternoon 4:30pm-7:15pm  
+
+Your lab partner's name:
+
+
+Did you take EE 160 here at Manoa (Yes/No)? No
+
+
+If you did, what semester?
+
+
+If you did not, how did you fulfill the pre-requisites
+for EE 367 (e.g., I took EE 160 at Kapiolani Community
+College in Fall 2008)? I took EE 160 at Kapi'olani Community College in 
+Spring of 2015.
+
+
+What was the color of the egg (egg.txt)?
+
+
+------  end of document
+

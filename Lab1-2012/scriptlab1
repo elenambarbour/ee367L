@@ -1,0 +1,35 @@
+#!/bin/sh
+# This will list the file names in the directory "Data"
+# This will set all the file names in "Data" into
+# an argument list.
+set Data/*   
+
+# List each file
+val=$#
+echo "Number of files in directory Data = $val"
+
+
+if [ $val -gt 100 ]  
+then
+   echo "The directory has over 100 files: too big!"
+elif [ $val -lt 1 ]; then
+   echo "The directory has no files"
+else
+   for a in $*; do
+      ./sum $a
+      ./sum $a >> dataSum
+   done
+fi
+
+
+if [ $val -lt 20 ]
+then 
+   echo "The directory has less than 20 files"
+fi
+
+if [ $val -gt 5 ]
+then 
+   echo "The directory has more than 5 files"
+fi
+
+

@@ -1,0 +1,18 @@
+#!/bin/csh
+# First line specifies the shell program to use but
+# subsequent lines with "#" are comments
+set testvar=555 # created a variable called "testvar"
+echo $testvar      
+# Example alias
+alias testalias echo Alias works!
+set history = 50
+echo $history
+set history = 10
+echo $history
+echo $path
+gcc test.c
+./a.out
+history
+testalias
+echo Exiting samplescript
+

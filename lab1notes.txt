@@ -1,0 +1,11 @@
+Notes on Lab1 1/12/17
+
+Session : 1/12/17 15:48 -
+Did the first action and found the egg in the directory Post/Room403 using 
+the find command and is described as follows: find . -name "<filename>"
+The color of the egg is maroon.
+
+Found the  letter in the directory Holmes/Room451 using the find command again.
+Edited the file, will turn it in during the lab time.
+
+

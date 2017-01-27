@@ -1,0 +1,25 @@
+EE 367 
+
+Contents of the directory:
+
+1.  Subdirectory Data which has data files
+
+2.  datagen.c is the source code that generated the data files
+    in subdirectory Data.  You can generate new data files by
+    changing some of the macro defines, compiling the program,
+    and running it.
+
+3.  sum.c is the source code that processes the data file, and
+    in particular it adds all the data values in a file and
+    displays it.  The makefile is for this program.
+
+4.  scriptarg and scriptlist are example scripts you should try.
+    You can run them by entering "./scriptarg" or "./scriptlist"
+    If you create your own script, be sure that the file is
+    executable.  Sometimes when creating a file with an editor,
+    the file will be read only, or restricted in some way.
+    Then you need must change the restrictions using "chmod" 
+    so that it can be executed. 
+
+
+ 

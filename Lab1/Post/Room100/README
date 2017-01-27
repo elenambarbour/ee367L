@@ -1,0 +1,56 @@
+C compilers do not like it when functions are
+defined after a call.  They produce errors or
+sometimes won't compile.  One solution would be
+to define the functions before they are called,
+but this makes it difficult to organize large
+programs with many subroutines.
+
+Another solution is to write prototypes of
+the functions at the beginning of a program
+file.  Prototypes are basically information
+about functions that are to be used in the program.
+They look like the first line of a function but
+with a semicolon.  These prototypes tell the
+compiler about a function so when a compiler
+comes across a function call, it knows what to
+do, e.g., data types of the input and output
+parameters.
+
+To make the programs easier to read, you
+can put prototypes in a header file, and
+"include" the header file at the beginning
+of the program file.
+
+In this directory are four programs
+
+program1.c -- C program where a function is defined
+   after it is called.  It results in 
+   compiler warnings.
+
+program2.c -- C program where a function is defined
+   before it is called.  No warnings  when
+   compiled.
+
+program3.c -- C program where a function is defined
+   before it is called but there is a prototype
+   before the call.  No warnings when compiled.
+
+program4.c -- C program that has a header file.
+   The header file has the prototype of the function.
+   No warnings when compiled.
+
+Read them and then compile them to see what happens.
+
+Also, you can compile source code outside of the
+current directory.  For example, in this directory,
+there is a subdirectory Room100A.  It has the
+source code "program5.c".  Type
+
+gcc Room100A/program5.c
+
+This will generate an a.out file in the current directory.
+
+
+
+
+

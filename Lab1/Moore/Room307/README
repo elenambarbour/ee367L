@@ -1,0 +1,4 @@
+Create a makefile that will compile
+hello.c.  The executable should
+have the name "project".
+

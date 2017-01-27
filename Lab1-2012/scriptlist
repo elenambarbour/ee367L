@@ -1,0 +1,43 @@
+#!/bin/sh
+# This will list the file names in the directory "Data"
+
+# This will set all the file names in "Data" into
+# an argument list.
+set Data/*   
+
+# List each file
+val=$#
+echo "Number of files in directory Data = $val"
+
+# The following condition (in square brackets [ ]) has the
+# syntax that there must be spaces between all the 
+# the all the components.  It there must also be spaces
+# between the square brackets and the components.  
+# For example the condition [$val -gt 100]  won't work
+# because there is no space between "[" and "$val", and
+# there is no space between "100" and "]".  
+
+if [ $val -gt 100 ]  
+then
+   echo "The directory has over 100 files: too big!"
+elif [ $val -lt 1 ]; then # Since "then" is on the same line, we need semicolon
+   echo "The directory has no files"
+else
+   echo "List of the files in Data" 
+   for a in $*; do
+      echo "$a"
+   done
+fi
+
+
+if [ $val -lt 20 ]
+then 
+   echo "The directory has less than 20 files"
+fi
+
+if [ $val -gt 5 ]
+then 
+   echo "The directory has more than 5 files"
+fi
+
+
