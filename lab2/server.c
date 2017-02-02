@@ -44,12 +44,14 @@ int main(void)
 	int yes=1;
 	char s[INET6_ADDRSTRLEN];
 	int rv;
-	int my_fd[2];		//our file descriptor for the pipe this is an integer array
-	char my_buffer[300];	//our buffer for the pipe
+	//int my_fd[2];		//our file descriptor for the pipe this is an integer array
+	char my_buffer[255];	//our buffer for the pipe
 	char *string = "I am a grandchild\n";
 	int readstring = 0;
 	int status;
-	//char *string = "Input data\n";
+	/* Added on 2/1/17*/
+	int in[2], out[2], n, pid;
+	
 
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
@@ -120,9 +122,29 @@ int main(void)
 			s, sizeof s);
 		printf("server: got connection from %s\n", s);
 
-		if (!fork()) { // this is the child process
+		if (!(pid =fork())) { // this is the child process
 			close(sockfd); // child doesn't need the listener
-			close(my_fd[0]);	//closing input of pipe
+			/*Close the stdin, stdout, stderr*/
+			close(0);
+			close(1);
+			close(2);
+			/* Redirect these inputs/outputs/errors to our pipes */
+			dup2(in[0],0);
+			dup2(out[1],1);
+			dup2(out[1],2);
+			/*close the ends we will not need*/
+			close(in[1]);
+			close(out[0]);
+			
+			execl("/usr/bin/ls", "ls", (char*)NULL);
+		}
+		//close(in[0]);
+		//close(out[1]);
+		//printf("This is the string: %s", string);
+		/*else{
+				
+		}*/
+			/*close(my_fd[0]);	//closing input of pipe
 			//wait(&status);//write(
 			if(!fork()){	//this is a child to the child aka grandchild. will process the ls command
 				close(my_fd[0]);	//close the input side of the pipe
@@ -141,10 +163,10 @@ int main(void)
 			}
 			//if (execl("/usr/bin/ls", "ls", (char*)NULL)== -1);
 		//	if (send(new_fd, "Hello, world!", 13, 0) == -1)
-			//	perror("send");
+			//	perror("send");*/
 			close(new_fd);
 			exit(0);
-		}
+		//}
 		close(new_fd);  // parent doesn't need this
 	}
 
