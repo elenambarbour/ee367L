@@ -135,6 +135,7 @@ int main(void)
 			else{
 				//close(my_fd[1]); 	//this closes the write end so we  are only reading
 				wait(&status);
+				open(my_fd[0]);
 				readstring = read(my_fd[0], my_buffer, sizeof(my_buffer));
 				printf("server: child  Recieved the string %s\n", my_buffer);
 				printf("server: child recieved the string readstring: %d\n", readstring);
