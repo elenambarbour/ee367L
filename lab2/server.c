@@ -126,15 +126,12 @@ int main(void)
 		if(!fork()){	//this is a child to the child aka grandchild. will process the ls command
 			
 			if(!fork()){
-			close(my_fd[0]);	//close the input side of the pipe
-			execl("/usr/bin/ls", "ls >> list.txt", (char*)NULL);
-			printf("server: grandchild my string is %s\n", string);
-			printf("server: grandchild string length is %d\n", strlen(string));
-			send(new_fd, string, strlen(string),0);
-			exit(0);
+			dup2(new_fd, 1);	//close the input side of the pipe
+			execl("/usr/bin/ls", "ls", (char*)NULL);
+			close(new_fd);
 			}
 			//write(my_fd[1], string,(strlen(string)+1));
-			exit(0);
+			//exit(0);
 		}
 				//wait(&status);
 				//readstring = read(my_fd[0], my_buffer, sizeof(my_buffer));
@@ -144,10 +141,10 @@ int main(void)
 			//if (execl("/usr/bin/ls", "ls", (char*)NULL)== -1);
 		//	if (send(new_fd, "Hello, world!", 13, 0) == -1)
 			//	perror("send");*/
-			close(new_fd);
-			exit(0);
+			//close(new_fd);
+			//exit(0);
 		//}
-		close(new_fd);  // parent doesn't need this
+		//close(new_fd);  // parent doesn't need this
 	}
 
 	return 0;
