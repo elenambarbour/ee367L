@@ -44,7 +44,7 @@ int main(void)
 	int yes=1;
 	char s[INET6_ADDRSTRLEN];
 	int rv;
-	//int my_fd[2];		//our file descriptor for the pipe this is an integer array
+	int my_fd[2];		//our file descriptor for the pipe this is an integer array
 	char my_buffer[255];	//our buffer for the pipe
 	char *string = "I am a grandchild\n";
 	int readstring = 0;
@@ -121,40 +121,19 @@ int main(void)
 			get_in_addr((struct sockaddr *)&their_addr),
 			s, sizeof s);
 		printf("server: got connection from %s\n", s);
-
-		if (!(pid =fork())) { // this is the child process
-			close(sockfd); // child doesn't need the listener
-			/*Close the stdin, stdout, stderr*/
-			close(0);
-			close(1);
-			close(2);
-			/* Redirect these inputs/outputs/errors to our pipes */
-			dup2(in[0],0);
-			dup2(out[1],1);
-			dup2(out[1],2);
-			/*close the ends we will not need*/
-			close(in[1]);
-			close(out[0]);
-			
-			execl("/usr/bin/ls", "ls", (char*)NULL);
-		}
-		//close(in[0]);
-		//close(out[1]);
-		//printf("This is the string: %s", string);
-		/*else{
-				
-		}*/
-			/*close(my_fd[0]);	//closing input of pipe
+		
+			close(my_fd[0]);	//closing input of pipe
 			//wait(&status);//write(
 			if(!fork()){	//this is a child to the child aka grandchild. will process the ls command
-				close(my_fd[0]);	//close the input side of the pipe
+				//close(my_fd[0]);	//close the input side of the pipe
 				printf("server: grandchild my string is %s\n", string);
 				printf("server: grandchild string length is %d\n", strlen(string));
 				write(my_fd[1], string,(strlen(string)+1));
+				close(my_fd[1]);
 				exit(0);
 			}
 			else{
-				close(my_fd[1]); 	//this closes the write end so we  are only reading
+				//close(my_fd[1]); 	//this closes the write end so we  are only reading
 				wait(&status);
 				readstring = read(my_fd[0], my_buffer, sizeof(my_buffer));
 				printf("server: child  Recieved the string %s\n", my_buffer);
