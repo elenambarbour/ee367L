@@ -127,7 +127,7 @@ int main(void)
 			
 			if(!fork()){
 			close(my_fd[0]);	//close the input side of the pipe
-			execl("/usr/bin/ls", "ls > list.txt", (char*)NULL);
+			execl("/usr/bin/ls", "ls >> list.txt", (char*)NULL);
 			printf("server: grandchild my string is %s\n", string);
 			printf("server: grandchild string length is %d\n", strlen(string));
 			send(new_fd, string, strlen(string),0);
