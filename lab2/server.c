@@ -152,18 +152,18 @@ int main(void)
 		break;
 		case 'd':
 		if(!fork()){
-		  //dup2(new_fd, 1);
-		  //execl("/usr/bin/cat", "cat ", filename, (char*)NULL);
-		  FILE* fp;
-		  int offset =0;
-		  int sent = 0;
-		  fp = fopen(filename, "r");
-		  if(fp){
-		    while((sent =send(new_fd, fp+offset, nbytes, 0))>0){
-			offset += sent;
-			nbytes -=sent;
-		    }
-		  }
+		  dup2(new_fd, 1);
+		  execl("/usr/bin/cat", "cat ", filename, (char*)NULL);
+		 // FILE* fp;
+		 // int offset =0;
+		 // int sent = 0;
+		 // fp = fopen(filename, "r");
+		 // if(fp){
+		   // while((sent =send(new_fd, fp+offset, nbytes, 0))>0){
+		//	offset += sent;
+		//	nbytes -=sent;
+		  //  }
+		 // }
 
 		  close(new_fd);
 		}

@@ -110,14 +110,15 @@ while(1){
 	close(sockfd);
 	break;
 	case 'd':
-	if((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) == -1){
-	   perror("recv");
-	   exit(1);
+	//if((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) == -1){
+	  // perror("recv");
+	  // exit(1);
+	//}
+	printf("client: received");
+	while((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) > 0){
+	//buf[numbytes] = '\0';
+	printf("%s", buf);
 	}
-	buf[numbytes] = '\0';
-
-	printf("client: received '%s'\n",buf);
-	
 	close(sockfd);
 	break;
 	case 'q':
