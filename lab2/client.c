@@ -35,7 +35,9 @@ int main(int argc, char *argv[])
 	struct addrinfo hints, *servinfo, *p;
 	int rv;
 	char s[INET6_ADDRSTRLEN];
-
+	char command;
+	int i = 3;
+	
 	if (argc != 2) {
 	    fprintf(stderr,"usage: client hostname\n");
 	    exit(1);
@@ -67,17 +69,26 @@ int main(int argc, char *argv[])
 		break;
 	}
 
+
 	if (p == NULL) {
 		fprintf(stderr, "client: failed to connect\n");
 		return 2;
 	}
+
 
 	inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)p->ai_addr),
 			s, sizeof s);
 	printf("client: connecting to %s\n", s);
 
 	freeaddrinfo(servinfo); // all done with this structure
+while(1){
 
+ 	printf("Please insert a command: (l)ist (q)uit\n");
+  	scanf("%c", &command);
+  	printf("%c", command);
+  //send(sockfd, command, sizeof(command)-1, 0);
+	switch(command){
+	case 'l':
 	if ((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
 	    perror("recv");
 	    exit(1);
@@ -86,9 +97,16 @@ int main(int argc, char *argv[])
 	buf[numbytes] = '\0';
 
 	printf("client: received '%s'\n",buf);
-
+	break;
+	case 'q':
 	close(sockfd);
+	return 0;
+	break;
+	}
+//	close(sockfd);
 
+}
+	close(sockfd);
 	return 0;
 }
 
