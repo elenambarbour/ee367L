@@ -14,7 +14,7 @@
 
 #include <arpa/inet.h>
 
-#define PORT "3501" // the port client will be connecting to 
+#define PORT "3601" // the port client will be connecting to 
 
 #define MAXDATASIZE 100 // max number of bytes we can get at once 
 
@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
 	int rv;
 	char s[INET6_ADDRSTRLEN];
 	char command;
+	char filename[MAXDATASIZE];
 	int i = 3;
 	
 	if (argc != 2) {
@@ -51,6 +52,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
 		return 1;
 	}
+while(1){
 
 	// loop through all the results and connect to the first we can
 	for(p = servinfo; p != NULL; p = p->ai_next) {
@@ -80,12 +82,11 @@ int main(int argc, char *argv[])
 			s, sizeof s);
 	printf("client: connecting to %s\n", s);
 
-	freeaddrinfo(servinfo); // all done with this structure
-while(1){
 
- 	printf("Please insert a command: (l)ist (q)uit\n");
-  	scanf("%c", &command);
-  	printf("%c", command);
+ 	printf("Please insert a command: (l)ist (c)heck <filename> (d)isplay <filename> (q)uit\n");
+	fgets(buf, MAXDATASIZE,stdin);
+	sscanf(buf,"%c %s", &command, filename);
+	send(sockfd, buf, MAXDATASIZE-1, 0); 
   //send(sockfd, command, sizeof(command)-1, 0);
 	switch(command){
 	case 'l':
@@ -97,9 +98,32 @@ while(1){
 	buf[numbytes] = '\0';
 
 	printf("client: received '%s'\n",buf);
+	close(sockfd);
+	break;
+	case 'c':
+	if((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) == -1){
+	   perror("recv");
+	   exit(1);
+	}
+	buf[numbytes] = '\0';
+	printf("client: recieved, '%s'\n", buf);
+	close(sockfd);
+	break;
+	case 'd':
+	if((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) == -1){
+	   perror("recv");
+	   exit(1);
+	}
+	buf[numbytes] = '\0';
+
+	printf("client: received '%s'\n",buf);
+	
+	close(sockfd);
 	break;
 	case 'q':
 	close(sockfd);
+	freeaddrinfo(servinfo); // all done with this structure
+
 	return 0;
 	break;
 	}
@@ -107,6 +131,8 @@ while(1){
 
 }
 	close(sockfd);
+	freeaddrinfo(servinfo); // all done with this structure
+
 	return 0;
 }
 

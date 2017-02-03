@@ -16,10 +16,10 @@
 #include <sys/wait.h>
 #include <signal.h>
 
-#define PORT "3501"  // the port users will be connecting to
+#define PORT "3601"  // the port users will be connecting to
 
 #define BACKLOG 10	 // how many pending connections queue will hold
-
+#define MAXDATASIZE 100
 void sigchld_handler(int s)
 {
 	while(waitpid(-1, NULL, WNOHANG) > 0);
@@ -46,10 +46,11 @@ int main(void)
 	char s[INET6_ADDRSTRLEN];
 	int rv;
 	int my_fd[2];		//our file descriptor for the pipe this is an integer array
-	char my_buffer[255];	//our buffer for the pipe
-	char *string = "I am a grandchild\n";
-	int readstring = 0;
+	char my_buffer[MAXDATASIZE];	//our buffer for the pipe
+	char command;
+	char filename[MAXDATASIZE];
 	int status;
+	size_t nbytes;
 	/* Added on 2/1/17*/
 	int in[2], out[2], n, pid;
 	
@@ -113,38 +114,62 @@ int main(void)
 		pipe(my_fd);		//allocates memory in the computer for a pipe (with a buffer) with file descriptor.
 		sin_size = sizeof their_addr;
 		new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &sin_size);
+		
 		if (new_fd == -1) {
 			perror("accept");
 			continue;
 		}
-
+		recv(new_fd, my_buffer, MAXDATASIZE, 0);
+		sscanf(my_buffer, "%c %s", &command, filename);
+		//printf("%s", filename);
 		inet_ntop(their_addr.ss_family,
 			get_in_addr((struct sockaddr *)&their_addr),
 			s, sizeof s);
 		printf("server: got connection from %s\n", s);
+		printf("server: I received this command  %c %s\n", &command, filename);
 
+	switch(command){
+		case 'l':
 		if(!fork()){	//this is a child to the child aka grandchild. will process the ls command
-			
-			if(!fork()){
 			dup2(new_fd, 1);	//close the input side of the pipe
 			execl("/usr/bin/ls", "ls", (char*)NULL);
 			close(new_fd);
-			}
-			//write(my_fd[1], string,(strlen(string)+1));
-			//exit(0);
 		}
-				//wait(&status);
-				//readstring = read(my_fd[0], my_buffer, sizeof(my_buffer));
-				//printf("server: child  Recieved the string %s\n", my_buffer);
-				//printf("server: child recieved the string readstring: %d\n", readstring);
+		break;
+		case 'c':
+		if(!fork()){
+			FILE* fp = NULL;
+			fp = fopen(filename, "r");
+			if(fp == NULL){
+			   send(new_fd, "File Does not exist!", 23, 0);
+			}
+			else {
+			fclose(fp);
+			send(new_fd, "File Exists!", 23, 0);
+			}
+			close(new_fd); 
+		}
+		break;
+		case 'd':
+		if(!fork()){
+		  //dup2(new_fd, 1);
+		  //execl("/usr/bin/cat", "cat ", filename, (char*)NULL);
+		  FILE* fp;
+		  int offset =0;
+		  int sent = 0;
+		  fp = fopen(filename, "r");
+		  if(fp){
+		    while((sent =send(new_fd, fp+offset, nbytes, 0))>0){
+			offset += sent;
+			nbytes -=sent;
+		    }
+		  }
 
-			//if (execl("/usr/bin/ls", "ls", (char*)NULL)== -1);
-		//	if (send(new_fd, "Hello, world!", 13, 0) == -1)
-			//	perror("send");*/
-			//close(new_fd);
-			//exit(0);
-		//}
-		//close(new_fd);  // parent doesn't need this
+		  close(new_fd);
+		}
+		break;
+
+	}
 	}
 
 	return 0;
