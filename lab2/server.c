@@ -150,15 +150,31 @@ int main(void)
 			close(new_fd); 
 		}
 		break;
-		case 'd':
+		case 'p':
 		if(!fork()){
 		  dup2(new_fd, 1);
 		  execl("/usr/bin/cat", "cat ", filename, (char*)NULL);
 		  close(new_fd);
 		}
 		break;
+		case 'd':
+		if(!fork()) {
+		  FILE* fp = NULL;
+		  fp = fopen(filename, "r");
+		  if(fp == NULL){
+		    send(new_fd,"File '%s' Does Not Exist\n",  50, 0);
+		  }
+		  else{
+		     fclose(fp);
+		     dup2(new_fd,1);
+		     execl("/usr/bin/cat", "cat", filename, (char*)NULL);
+		     close(new_fd);
+		  }
+		}
+		break;
 
 	}
+	close(new_fd);
 	}
 
 	return 0;

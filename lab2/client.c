@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 	char command;
 	char filename[MAXDATASIZE];
 	int i = 3;
+	char reply;
 	
 	if (argc != 2) {
 	    fprintf(stderr,"usage: client hostname\n");
@@ -109,16 +110,37 @@ while(1){
 	printf("client: recieved, '%s'\n", buf);
 	close(sockfd);
 	break;
-	case 'd':
-	//if((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) == -1){
-	  // perror("recv");
-	  // exit(1);
-	//}
+	case 'p':
 	printf("client: received");
 	while((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) > 0){
-	//buf[numbytes] = '\0';
 	printf("%s", buf);
 	}
+	close(sockfd);
+	break;
+	case 'd':
+	;
+	FILE* fp = NULL;
+	fp = fopen(filename, "r");
+	if(fp != NULL) {
+	  printf("%s already exists in this directory, would you like to overwrite?\n", filename);
+	  scanf("%c", &reply); 
+	}
+	if(reply == 'n') {
+	  printf("Processing has ended \n");
+	  fclose(fp);
+	  close(sockfd);
+	  break;
+	}
+	else if(reply == 'y' || fp ==NULL) {
+	     fp = fopen(filename, "w+");
+	     while((numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0)) > 0) {
+	  	printf("%s", buf);
+		fputs(buf, fp);
+	  }
+	fclose(fp);
+
+	}
+	printf("Processing has ended \n");
 	close(sockfd);
 	break;
 	case 'q':
@@ -128,7 +150,6 @@ while(1){
 	return 0;
 	break;
 	}
-//	close(sockfd);
 
 }
 	close(sockfd);
