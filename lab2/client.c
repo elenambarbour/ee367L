@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
 	char s[INET6_ADDRSTRLEN];
 	char command;
 	char filename[MAXDATASIZE];
+	char new_filename[MAXDATASIZE];
 	int i = 3;
 	char reply;
 	
@@ -132,9 +133,11 @@ while(1){
 	  break;
 	}
 	else if(reply == 'y' || fp ==NULL) {
-	     fp = fopen(filename, "w+");
+	    printf("What would you like to save it as?\n");
+	    scanf("%s", new_filename);
+	     fp = fopen(new_filename, "w+");
 	     while((numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0)) > 0) {
-	  	printf("%s", buf);
+	  	//printf("%s", buf);
 		fputs(buf, fp);
 	  }
 	fclose(fp);

@@ -162,7 +162,7 @@ int main(void)
 		  FILE* fp = NULL;
 		  fp = fopen(filename, "r");
 		  if(fp == NULL){
-		    send(new_fd,"File '%s' Does Not Exist\n",  50, 0);
+		    send(new_fd,"File Does Not Exist\n",  50, 0);
 		  }
 		  else{
 		     fclose(fp);
